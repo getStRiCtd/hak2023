@@ -6,9 +6,9 @@ rf = Roboflow(api_key="fKNgN4TLK6ZSRlRHPdZZ")
 project = rf.workspace().project("hak2023_2")
 model = project.version(1).model
 
-
+IMG_PATH = ''
 nums = 2
-a = model.predict("/content/hak2023/Data/vk/photo_2023-08-26_13-41-23.jpg", confidence=40, overlap=30).json()
+a = model.predict(IMG_PATH, confidence=40, overlap=30).json()
 
 def read_name_id_vk(data:dict, img_path) -> None:
   print(data)
@@ -35,4 +35,4 @@ def read_name_id_vk(data:dict, img_path) -> None:
   return out
 
 
-read_name_id_vk(a, "/content/hak2023/Data/vk/photo_2023-08-26_13-41-23.jpg")
+read_name_id_vk(a, IMG_PATH)
