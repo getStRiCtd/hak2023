@@ -9,7 +9,7 @@ from matplotlib.patches import Rectangle
 
 import easyocr
 
-img_fns = glob(r'C:\Users\caretaker\Documents\hakaton\hak2023\Data\vk\images\*')
+img_fns = glob('Data/vk/image/*')
 num = 5
 reader = easyocr.Reader(['en', 'ru'], gpu = True)
 REGEXP = r'^[1-9]*[ ]?[Дд]ру|[чн]ик[иа(ов)]*'

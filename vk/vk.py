@@ -8,11 +8,9 @@ detect_features: img_fns, reader = easyocr.Reader(['en', 'ru'], gpu = True)
 detect_name: 
 """
 
-# img_path = detect_features.img_fns[detect_features.num]
-img_path = r"C:\Users\caretaker\Documents\hakaton\hak2023\Data\vk\photo_2023-08-26_13-41-23.jpg"
+img_path = detect_features.img_fns[detect_features.num]
 results = detect_features.reader.readtext(img_path)
-print("HERE!")
-print(img_path)
+
 
 df = pd.DataFrame(results, columns=['bbox','text','conf'])
 
