@@ -10,10 +10,26 @@ from matplotlib.patches import Rectangle
 import easyocr
 
 img_fns = glob('Data/vk/images/*')
+num = 234
 reader = easyocr.Reader(['en', 'ru'], gpu = True)
 REGEXP = r'^[1-9]*[ ]?[Дд]ру|[чн]ик[иа(ов)]*'
 
-num = 234
+
+def convert_to_dict(string: str) -> None:
+  out = string.split() 
+  if len(out) == 2:
+    try:
+      out = {out[1]: int(out[0])}
+      return out
+    except:
+      pass
+
+    try:
+      out = {out[0]: int(out[1])}
+      return out
+    except:
+      return None
+
 
 def find(df, bbox:list) -> list:
   """
@@ -24,7 +40,6 @@ def find(df, bbox:list) -> list:
   for i in range(len(bboxes)):
    
     if (-30 < bbox[0][0] - bboxes[i][0][0] < 40) and  (0 < bbox[0][1]-bboxes[i][0][1] < 100) and text[i].isdigit():
-      print(bbox[0][0] - bboxes[i][0][0])
       return int(text[i])
   else:
     return None
@@ -43,7 +58,6 @@ def convert_to_dict(string: str) -> None:
       return out
     except:
       return None
-    
 
 def get_data_vk(df, img_path):
     use_to = pd.DataFrame(df['text'].str.lower())
@@ -64,6 +78,15 @@ def get_data_vk(df, img_path):
 
     return out
 
+def sum(data:dict) -> int:
+    sum = 0
+    for i in data.keys():
+        sum+= data[i]
+    return sum
+
+
+
+
 if __name__ == "__main__":
     img_path = img_fns[num]
     results = reader.readtext(img_path)
@@ -71,5 +94,4 @@ if __name__ == "__main__":
     df = pd.DataFrame(results, columns=['bbox','text','conf'])
 
     res = get_data_vk(df, img_path)
-    res 
-
+    res = sum(res)
