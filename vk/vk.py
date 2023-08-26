@@ -1,97 +1,24 @@
+import detect_features
+import detect_name
+
 import pandas as pd
-import numpy as np
-import pandas as pd
-import numpy as np
 
-from glob import glob
-import matplotlib.pyplot as plt
-from matplotlib.patches import Rectangle
+"""
+detect_features: img_fns, reader = easyocr.Reader(['en', 'ru'], gpu = True)
+detect_name: 
+"""
 
-import easyocr
+# img_path = detect_features.img_fns[detect_features.num]
+img_path = r"C:\Users\caretaker\Documents\hakaton\hak2023\Data\vk\photo_2023-08-26_13-41-23.jpg"
+results = detect_features.reader.readtext(img_path)
+print("HERE!")
+print(img_path)
 
-img_fns = glob('Data/vk/images/*')
-num = 234
-reader = easyocr.Reader(['en', 'ru'], gpu = True)
-REGEXP = r'^[1-9]*[ ]?[Дд]ру|[чн]ик[иа(ов)]*'
+df = pd.DataFrame(results, columns=['bbox','text','conf'])
 
+res = detect_features.get_data_vk(df, img_path)
+res = detect_features.sum(res)
 
-def convert_to_dict(string: str) -> None:
-  out = string.split() 
-  if len(out) == 2:
-    try:
-      out = {out[1]: int(out[0])}
-      return out
-    except:
-      pass
-
-    try:
-      out = {out[0]: int(out[1])}
-      return out
-    except:
-      return None
-
-
-def find(df, bbox:list) -> list:
-  """
-  Расширяем область поиска
-  """
-  bboxes = df.bbox.tolist()
-  text = df.text.tolist()
-  for i in range(len(bboxes)):
-   
-    if (-30 < bbox[0][0] - bboxes[i][0][0] < 40) and  (0 < bbox[0][1]-bboxes[i][0][1] < 100) and text[i].isdigit():
-      return int(text[i])
-  else:
-    return None
-
-def convert_to_dict(string: str) -> None:
-  out = string.split() 
-  if len(out) == 2:
-    try:
-      out = {out[1]: int(out[0])}
-      return out
-    except:
-      pass
-
-    try:
-      out = {out[0]: int(out[1])}
-      return out
-    except:
-      return None
-
-def get_data_vk(df, img_path):
-    use_to = pd.DataFrame(df['text'].str.lower())
-    use_to['bbox'] = df['bbox']
-    use_to = use_to.loc[use_to['text'].str.contains(REGEXP)]
-    tmp = use_to['text'].tolist()
-    bboxes = use_to['bbox'].tolist()
-    out = {}
-    
-    for i in range(len(tmp)):
-      g = convert_to_dict(tmp[i])
-      if g:
-        out.update(g)
-      else:
-        check = find(df, bboxes[i])
-        if check:
-          out.update({tmp[i]:check})
-
-    return out
-
-def sum(data:dict) -> int:
-    sum = 0
-    for i in data.keys():
-        sum+= data[i]
-    return sum
-
-
-
-
-if __name__ == "__main__":
-    img_path = img_fns[num]
-    results = reader.readtext(img_path)
-
-    df = pd.DataFrame(results, columns=['bbox','text','conf'])
-
-    res = get_data_vk(df, img_path)
-    res = sum(res)
+a = detect_name.model.predict(img_path, confidence=40, overlap=30).json()
+name =  detect_name.read_name_id_vk(a, img_path)
+print(name, res)
