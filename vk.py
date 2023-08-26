@@ -51,16 +51,16 @@ def get_data_vk(df, img_path):
     use_to = use_to.loc[use_to['text'].str.contains(REGEXP)]
     tmp = use_to['text'].tolist()
     bboxes = use_to['bbox'].tolist()
-    out = []
+    out = {}
     
     for i in range(len(tmp)):
       g = convert_to_dict(tmp[i])
       if g:
-        out.append(g)
+        out.update(g)
       else:
         check = find(df, bboxes[i])
         if check:
-          out.append({tmp[i]:check})
+          out.update({tmp[i]:check})
 
     return out
 
