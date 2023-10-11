@@ -5,6 +5,7 @@
 Используется библиотека easyocr.  
 Пример работы алгоритма:  
 <img src="https://github.com/getStRiCtd/hak2023/blob/main/Screenshots/download.png">  
+<img src="https://github.com/getStRiCtd/hak2023/blob/main/Screenshots/scrren.png">  
 
 
 ## Данные
